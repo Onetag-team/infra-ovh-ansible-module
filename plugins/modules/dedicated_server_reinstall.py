@@ -37,7 +37,7 @@ def run_module():
     if module.check_mode:
         module.exit_json(changed=True, msg="[CHECK_MODE] Would reinstall server with provided config")
 
-    result = client.wrap_call(
+    client.wrap_call(
         "POST",
         f"/dedicated/server/{service_name}/reinstall",
         operatingSystem=operating_system,
