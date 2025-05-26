@@ -5,6 +5,7 @@ __metaclass__ = type
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import OVH, ovh_argument_spec
 
+
 def run_module():
     module_args = ovh_argument_spec()
     module_args.update(dict(
@@ -46,8 +47,10 @@ def run_module():
 
     module.exit_json(msg=f"Installation in progress on {service_name} as {hostname}!", changed=True)
 
+
 def main():
     run_module()
+
 
 if __name__ == '__main__':
     main()
