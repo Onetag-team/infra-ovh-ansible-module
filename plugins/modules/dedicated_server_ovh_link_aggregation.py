@@ -42,11 +42,12 @@ RETURN = """ # """
 
 from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import (OVH, ovh_argument_spec)
 
-def get_virtual_network_interfaces(service_name: str, client: OVH) -> list [str]:
+
+def get_virtual_network_interfaces(service_name: str, client: OVH) -> list[str]:
     return client.wrap_call("GET", f"/dedicated/server/{service_name}/virtualNetworkInterface")
 
 
-def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_ifaces: list [str]) -> int:
+def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_ifaces: list[str]) -> int:
     result = client.wrap_call(
         "POST",
         f"/dedicated/server/{service_name}/ola/aggregation",
@@ -63,7 +64,7 @@ def run_ola_reset(service_name: str, client: OVH, virtual_network_iface: str) ->
     return result['taskId']
 
 
-def check_task_is_done(service_name: str, task_id: int, client: OVH)-> bool:
+def check_task_is_done(service_name: str, task_id: int, client: OVH) -> bool:
     is_done: bool = False
     while not is_done:
         result = client.wrap_call("GET", f"/dedicated/server/{service_name}/task/{task_id}")
@@ -103,20 +104,24 @@ def run_module():
     elif len(virtual_network_ifaces) == 1 and state.__eq__("reset"):
         task_id = run_ola_reset(service_name, client, virtual_network_ifaces[0])
         changed = check_task_is_done(service_name, task_id, client)
-    
+
     elif len(virtual_network_ifaces) == 1 and state.__eq__("private_aggragation"):
         module.exit_json(
             msg="OLA {} request has already been done on dedicated server {}".format(ola_request_name, service_name), changed=changed
         )
-    
+
     elif len(virtual_network_ifaces) == 2 and state.__eq__("reset"):
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. OLA private aggregation request should be requested before reset one".format(ola_request_name, service_name)
+            msg="OLA {} request can not be executed on dedicated server {}. " \
+            "OLA private aggregation request should be requested before reset one"
+            .format(ola_request_name, service_name)
         )
-    
+
     else: 
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. No Virtual Network Interfaces detected".format(ola_request_name, service_name)
+            msg="OLA {} request can not be executed on dedicated server {}. " \
+            "No Virtual Network Interfaces detected"
+            .format(ola_request_name, service_name)
         )
 
     module.exit_json(
