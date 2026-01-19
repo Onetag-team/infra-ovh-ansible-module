@@ -45,6 +45,7 @@ from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import (OVH, ovh
 def get_virtual_network_interfaces(service_name: str, client: OVH) -> list [str]:
     return client.wrap_call("GET", f"/dedicated/server/{service_name}/virtualNetworkInterface")
 
+
 def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_ifaces: list [str]) -> int:
     result = client.wrap_call(
         "POST",
@@ -53,12 +54,14 @@ def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_i
         virtualNetworkInterfaces=virtual_network_ifaces)
     return result['taskId']
 
+
 def run_ola_reset(service_name: str, client: OVH, virtual_network_iface: str) -> int:
     result = client.wrap_call(
         "POST",
         f"/dedicated/server/{service_name}/ola/reset",
         virtualNetworkInterface=virtual_network_iface)
     return result['taskId']
+
 
 def check_task_is_done(service_name: str, task_id: int, client: OVH)-> bool:
     is_done: bool = False
@@ -71,13 +74,12 @@ def check_task_is_done(service_name: str, task_id: int, client: OVH)-> bool:
     return is_done
 
 
-
 def run_module():
     module_args = ovh_argument_spec()
     module_args.update(
         dict(
             service_name=dict(required=True),
-            state=dict(choices=['private_aggragation','reset'], default='private_aggragation')
+            state=dict(choices=['private_aggragation', 'reset'], default='private_aggragation')
         )
     )
 
@@ -95,20 +97,23 @@ def run_module():
     virtual_network_ifaces = get_virtual_network_interfaces(service_name, client)
 
     if len(virtual_network_ifaces) == 2 and state.__eq__("private_aggragation"):
-        task_id = run_ola_private_aggrgation(service_name,virtual_network_ifaces=virtual_network_ifaces, client=client)
+        task_id = run_ola_private_aggrgation(service_name, virtual_network_ifaces=virtual_network_ifaces, client=client)
         changed = check_task_is_done(service_name, task_id, client)
-        
+
     elif len(virtual_network_ifaces) == 1 and state.__eq__("reset"):
         task_id = run_ola_reset(service_name, client, virtual_network_ifaces[0])
         changed = check_task_is_done(service_name, task_id, client)
+    
     elif len(virtual_network_ifaces) == 1 and state.__eq__("private_aggragation"):
         module.exit_json(
             msg="OLA {} request has already been done on dedicated server {}".format(ola_request_name, service_name), changed=changed
         )
+    
     elif len(virtual_network_ifaces) == 2 and state.__eq__("reset"):
         module.fail_json(
             msg="OLA {} request can not be executed on dedicated server {}. OLA private aggregation request should be requested before reset one".format(ola_request_name, service_name)
         )
+    
     else: 
         module.fail_json(
             msg="OLA {} request can not be executed on dedicated server {}. No Virtual Network Interfaces detected".format(ola_request_name, service_name)
