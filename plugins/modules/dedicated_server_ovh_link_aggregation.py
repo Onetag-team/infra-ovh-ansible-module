@@ -112,14 +112,14 @@ def run_module():
 
     elif len(virtual_network_ifaces) == 2 and state.__eq__("reset"):
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. " 
+            msg="OLA {} request can not be executed on dedicated server {}. "
             "OLA private aggregation request should be requested before reset one"
             .format(ola_request_name, service_name)
         )
 
     else:
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. " 
+            msg="OLA {} request can not be executed on dedicated server {}. "
             "No Virtual Network Interfaces detected"
             .format(ola_request_name, service_name)
         )
