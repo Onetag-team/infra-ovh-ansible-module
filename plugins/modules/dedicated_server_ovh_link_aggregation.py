@@ -13,7 +13,7 @@ DOCUMENTATION = """
 module: dedicated_server_ovh_link_aggregation
 short_description: manage OLA
 description:
-    - manage OVHcloud Link Aggregation 
+    - manage OVHcloud Link Aggregation
 author: Synthesio SRE Team
 requirements:
     - ovh >= 0.5.0
@@ -112,14 +112,14 @@ def run_module():
 
     elif len(virtual_network_ifaces) == 2 and state.__eq__("reset"):
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. " \
+            msg="OLA {} request can not be executed on dedicated server {}. " 
             "OLA private aggregation request should be requested before reset one"
             .format(ola_request_name, service_name)
         )
 
-    else: 
+    else:
         module.fail_json(
-            msg="OLA {} request can not be executed on dedicated server {}. " \
+            msg="OLA {} request can not be executed on dedicated server {}. " 
             "No Virtual Network Interfaces detected"
             .format(ola_request_name, service_name)
         )
