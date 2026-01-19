@@ -40,10 +40,7 @@ EXAMPLES = r"""
 
 RETURN = """ # """
 
-from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import (
-    OVH,
-    ovh_argument_spec,
-)
+from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import (OVH, ovh_argument_spec)
 
 def get_virtual_network_interfaces(service_name: str, client: OVH) -> list [str]:
     return client.wrap_call("GET", f"/dedicated/server/{service_name}/virtualNetworkInterface")
