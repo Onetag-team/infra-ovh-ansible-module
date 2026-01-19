@@ -45,7 +45,7 @@ from ansible_collections.synthesio.ovh.plugins.module_utils.ovh import (OVH, ovh
 def get_virtual_network_interfaces(service_name: str, client: OVH) -> list [str]:
     return client.wrap_call("GET", f"/dedicated/server/{service_name}/virtualNetworkInterface")
 
-def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_ifaces: list[str]) -> int:
+def run_ola_private_aggrgation(service_name: str, client: OVH, virtual_network_ifaces: list [str]) -> int:
     result = client.wrap_call(
         "POST",
         f"/dedicated/server/{service_name}/ola/aggregation",
