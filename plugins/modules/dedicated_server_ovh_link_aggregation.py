@@ -67,11 +67,14 @@ def run_ola_reset(service_name: str, client: OVH, virtual_network_iface: str) ->
 def check_task_is_done(service_name: str, task_id: int, client: OVH) -> bool:
     is_done: bool = False
     while not is_done:
-        result = client.wrap_call("GET", f"/dedicated/server/{service_name}/task/{task_id}")
-        if (result is not None) and (str("done").__eq__(result['status'])):
-            is_done = True
-            break
-        time.sleep(5)
+        try:
+            result = client.wrap_call("GET", f"/dedicated/server/{service_name}/task/{task_id}")
+            if (result is not None) and (str("done").__eq__(result['status'])):
+                is_done = True
+                break
+            time.sleep(5)
+        except Exception as e:
+            continue
     return is_done
 
 
