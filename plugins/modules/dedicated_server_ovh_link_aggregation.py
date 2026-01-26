@@ -73,7 +73,7 @@ def check_task_is_done(service_name: str, task_id: int, client: OVH) -> bool:
                 is_done = True
                 break
             time.sleep(5)
-        except Exception as e:
+        except Exception:
             continue
     return is_done
 
